@@ -70,12 +70,15 @@ function SWEP:PrimaryAttack()
 	Kugel.Callback = function(Schuetze, Ziel)				
 		if SERVER and Ziel.Entity:IsPlayer() then
 			net.Start( "CamFensterDetePlyCam" )
+			print("sending")
 			net.WriteEntity(Ziel.Entity)
-			net.Send( Schuetze )
+			net.Send(Schuetze)
 			self:TakePrimaryAmmo( 1 )
+			
 		end
 	end
 	self.Owner:FireBullets( Kugel )
+	self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
 end
 net.Receive("CamSchliessenDetePlyCam", function()
 	if SERVER then
