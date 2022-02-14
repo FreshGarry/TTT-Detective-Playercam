@@ -18,7 +18,6 @@ local function CamActive(target)
 		render.RenderView( {
 			origin = target:GetPos() + Vector(0, 0, 100),
 			angles = Angle( target:EyeAngles().xaw, target:EyeAngles().yaw, 0 ),
-			self.entity:DrawModel() ???
 			x = x,
 			y = y,
 			w = w,
@@ -48,6 +47,7 @@ hook.Add("TTTPrepareRound", "TTTPrepareRound4TTTPlayerCam", function()
 end)
 -- Open CamWindow
 net.Receive("CamFensterDetePlyCam", function()
+	print("Debug received")
 	ply = net.ReadEntity()
 	CamActive(ply)
 end)
