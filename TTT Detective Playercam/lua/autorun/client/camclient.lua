@@ -2,6 +2,7 @@
 -- Variables
 local CamFrame = nil
 local CamFrameOffen = false
+local renderingCamView = false
 -- CamWindow function
 local function CamActive(target)
 	-- create window
