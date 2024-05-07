@@ -2,6 +2,7 @@
 -- Variables
 local CamFrame = nil
 local CamFrameOffen = false
+local renderingCamView = false
 -- CamWindow function
 local function CamActive(target)
 	-- create window
@@ -15,14 +16,19 @@ local function CamActive(target)
 	-- Set View
 	function CamFrame:Paint( w, h )
 	x, y, w, h = CamFrame:GetBounds()
+
+		renderingCamView = true -- This frame is rendering the camera view
 		render.RenderView( {
-			origin = target:GetPos() + Vector(0, 0, 100),
+			origin = target:GetBonePosition(target:LookupBone("ValveBiped.Bip01_Head1")), -- aligns view roughly with their eyes
+			znear = 7, -- ensures the head doesn't actually block the view
+			fov = 65,
 			angles = Angle( target:EyeAngles().xaw, target:EyeAngles().yaw, 0 ),
 			x = x,
 			y = y,
 			w = w,
 			h = h,
-		 } )
+		} )
+		renderingCamView = false -- No longer rendering the camera view
 
 	end
 	-- check if it is closed
@@ -62,4 +68,9 @@ hook.Add("Think", "Think4TTTDetePlayerCam2", function()
 			net.SendToServer()
 		end
 	end
+end)
+
+hook.Add("ShouldDrawLocalPlayer", "TTTDetePlayerCam.ShouldDrawLocalPlayer.renderPlayerInView", function(ply)
+	-- If the current frame is rendering the camera view, we should render our own model
+	if renderingCamView then return true end
 end)
